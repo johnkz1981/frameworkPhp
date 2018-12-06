@@ -4,10 +4,15 @@ namespace app\services;
 
 class Autoloader
 {
+  private $fileExtension = '.php';
+
   public function loadClass($className)
   {
-    $className = str_replace('app', '', $className);
-    $filename = ROOT_DIR . "{$className}.php";
-    include_once($filename);
+    $className = str_replace(['app\\', '\\'], [ROOT_DIR, '/'], $className);
+    $className .= $this->fileExtension;
+
+    if (file_exists($className)) {
+      include $className;
+    }
   }
 }
