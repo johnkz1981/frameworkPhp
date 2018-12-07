@@ -16,9 +16,9 @@ interface IModel
 
   public function create(object $object): int;
 
-  public function getSqlInsert(): string;
+  public function getSqlInsert(object $object): string;
 
-  public function getSqlUpdate(): string;
+  public function getSqlUpdate(object $object): string;
 
   public function getParams(object $object): array;
 

@@ -15,24 +15,6 @@ class Product extends Model
     return 'products';
   }
 
-  public function getSqlInsert(): string
-  {
-    $tableName = $this->getTableName();
-    $sql = "INSERT INTO {$tableName} (`name`, description, price, producer_id, category_id)";
-    $sql .= " VALUES (:name, :description, :price, :producer_id, :category_id)";
-
-    return $sql;
-  }
-
-  public function getSqlUpdate(): string
-  {
-    $tableName = $this->getTableName();
-    $sql = "UPDATE {$tableName} SET name = :name, description = :description,";
-    $sql .= "price = :price, producer_id = :producer_id, category_id = :category_id WHERE id = :id";
-
-    return $sql;
-  }
-
   public function getParams(object $object): array
   {
     return [

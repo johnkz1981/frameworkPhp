@@ -12,8 +12,8 @@ class Db
     'driver' => 'mysql',
     'host' => 'localhost',
     'login' => 'root',
-    'password' => '',
-    'database' => 'rose',
+    'password' => 'Cnj1124763!@',
+    'database' => 'framework',
     'port' => 3306,
     'charset' => 'utf8'
   ];

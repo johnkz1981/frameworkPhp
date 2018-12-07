@@ -38,6 +38,25 @@ abstract class Model implements IModel
     return $this->db->execute($sql, [':id' => $id]);
   }
 
+    public function getSqlInsert(object $object): string
+    {
+        $params = $this->getParams($object);
+        array_shift($params);
+
+        $paramKeys =[];
+        foreach ($params as $item => $key){
+            $paramKeys[] = substr($item, 1);
+        }
+
+        $keys = implode(',', $paramKeys);
+        $values = implode(',', array_keys($params));
+
+        $tableName = $this->getTableName();
+        $sql = "INSERT INTO {$tableName} ($keys) VALUES ($values)";
+
+        return $sql;
+    }
+
   public function create(object $object): int
   {
     foreach ($this->getRequiredFields() as $field){
@@ -47,18 +66,38 @@ abstract class Model implements IModel
       }
     }
 
-    $sql = $this->getSqlInsert();
+    $sql = $this->getSqlInsert($object);
     $params = $this->getParams($object);
     array_shift($params);
 
     return $this->db->execute($sql, $params);
   }
 
+    public function getSqlUpdate(object $object): string
+    {
+        $params = $this->getParams($object);
+        array_shift($params);
+
+        $assignment =[];
+        foreach ($params as $item => $param){
+
+            $key = substr($item, 1);
+            $assignment[] = "$key = $item";
+        }
+
+        $keys = implode(',', $assignment);
+
+        $tableName = $this->getTableName();
+        $sql = "UPDATE {$tableName} SET $keys WHERE id = :id";
+
+        return $sql;
+    }
+
   public function change(object $object): int
   {
     $object = (object)array_merge((array)$this->getOne($object->id), (array)$object);
 
-    $sql = $this->getSqlUpdate();
+    $sql = $this->getSqlUpdate($object);
 
     return $this->db->execute($sql, $this->getParams($object));
   }

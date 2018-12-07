@@ -21,10 +21,10 @@ $obj->price = 455;
 // $product->change($obj);
 // $product->create($obj);
 
-$obj->id = 6;
+$obj->id = 1;
 $obj->user = 'Vas';
 // $obj->password = '4566';
 
- echo $product->create($obj);
+// echo $product->create($obj);
 
-// echo $product->change($obj);
+echo $product->change($obj);
