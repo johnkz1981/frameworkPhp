@@ -30,5 +30,36 @@ abstract class Model implements IModel
     return $this->db->queryAll($sql);
   }
 
-  abstract public function getTableName(): string;
+  public function remove(int $id): int
+  {
+    $tableName = $this->getTableName();
+    $sql = "DELETE FROM {$tableName} WHERE id = :id";
+
+    return $this->db->execute($sql, [':id' => $id]);
+  }
+
+  public function create(object $object): int
+  {
+    foreach ($this->getRequiredFields() as $field){
+      if(!isset($object->$field)){
+        echo "Поле $field обязательно для заполнения";
+        exit;
+      }
+    }
+
+    $sql = $this->getSqlInsert();
+    $params = $this->getParams($object);
+    array_shift($params);
+
+    return $this->db->execute($sql, $params);
+  }
+
+  public function change(object $object): int
+  {
+    $object = (object)array_merge((array)$this->getOne($object->id), (array)$object);
+
+    $sql = $this->getSqlUpdate();
+
+    return $this->db->execute($sql, $this->getParams($object));
+  }
 }

@@ -9,21 +9,22 @@ include ROOT_DIR . "/services/Autoloader.php";
 
 spl_autoload_register([new services\Autoloader(), 'loadClass']);
 
-$product = new Product();
-// $product->remove(1);
-
+ $product = new Product();
+// $user = new User();
 $obj = new \stdClass();
 
-$obj->name = 'Красная роза';
-$obj->id = 6;
-$obj->price = 155;
+// $obj->id = 6;
+$obj->name = 'Анютины глазки';
+$obj->price = 455;
 
+// $product->remove($obj->id);
 // $product->change($obj);
-// echo $product->create($obj);
+// $product->create($obj);
 
-$user = new User();
+$obj->id = 6;
+$obj->user = 'Vas';
+// $obj->password = '4566';
 
-$obj->user = 'john';
-$obj->password = '123';
+ echo $product->create($obj);
 
-$user->create($obj);
+// echo $product->change($obj);
