@@ -2,25 +2,19 @@
 
 namespace app\interfaces;
 
+use app\models\Model;
+
 interface IModel
 {
-  public function getOne(int $id): object;
+  public static function getOne(int $id): Model;
 
-  public function getAll(): array;
+  public static function getAll(): array;
 
-  public function getTableName(): string;
+  public static function getTableName(): string;
 
-  public function remove(int $id): int;
+  public function delete(): int;
 
-  public function change(object $object): int;
+  public function update(): int;
 
-  public function create(object $object): int;
-
-  public function getSqlInsert(): string;
-
-  public function getSqlUpdate(): string;
-
-  public function getParams(object $object): array;
-
-  public function getRequiredFields(): array;
+  public function insert(): int;
 }

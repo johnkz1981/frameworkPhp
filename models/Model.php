@@ -14,52 +14,73 @@ abstract class Model implements IModel
     $this->db = Db::getInstance();
   }
 
-  public function getOne(int $id): object
+  public static function getOne(int $id): Model
   {
-    $tableName = $this->getTableName();
+    $tableName = static::getTableName();
     $sql = "SELECT * FROM {$tableName} WHERE id = :id";
 
-    return $this->db->queryOne($sql, [':id' => $id]);
+    return DB::getInstance()->queryObject($sql, [':id' => $id], get_called_class());
   }
 
-  public function getAll(): array
+  public static function getAll(): array
   {
-    $tableName = $this->getTableName();
+    $tableName = static::getTableName();
     $sql = "SELECT * FROM {$tableName}";
 
-    return $this->db->queryAll($sql);
+    return DB::getInstance()->queryAll($sql);
   }
 
-  public function remove(int $id): int
+  public function delete(): int
   {
     $tableName = $this->getTableName();
     $sql = "DELETE FROM {$tableName} WHERE id = :id";
 
-    return $this->db->execute($sql, [':id' => $id]);
+    return $this->db->execute($sql, [':id' => $this->id]);
   }
 
-  public function create(object $object): int
+  public function insert(): int
   {
-    foreach ($this->getRequiredFields() as $field){
-      if(!isset($object->$field)){
-        echo "Поле $field обязательно для заполнения";
-        exit;
+    $params = [];
+    $columns = [];
+
+    foreach ($this as $key => $value) {
+      if ($key === 'db') {
+        continue;
       }
+      $params[":{$key}"] = $value;
+      $columns[] = "`$key`";
     }
 
-    $sql = $this->getSqlInsert();
-    $params = $this->getParams($object);
-    array_shift($params);
+    $columns = implode(',', $columns);
+    $placeholders = implode(',', array_keys($params));
 
+    $tableName = $this->getTableName();
+    $sql = "INSERT INTO {$tableName} ($columns) VALUES ({$placeholders})";
     return $this->db->execute($sql, $params);
   }
 
-  public function change(object $object): int
+  public function update(): int
   {
-    $object = (object)array_merge((array)$this->getOne($object->id), (array)$object);
+    $params = [];
 
-    $sql = $this->getSqlUpdate();
+    foreach ($this as $key => $value) {
+      if ($key === 'db') {
+        continue;
+      }
+      $sqlParams["`$key` = :{$key}"] = $value;
+      $params[":{$key}"] = $value;
+    }
 
-    return $this->db->execute($sql, $this->getParams($object));
+    // $columns = implode(',', $columns);
+    $placeholders = implode(',', array_keys($sqlParams));
+    var_dump($params);
+    $tableName = $this->getTableName();
+    $sql = "UPDATE {$tableName} SET {$placeholders} WHERE id = :id";
+    var_dump($sql);
+    return $this->db->execute($sql, $params);
+  }
+
+  public function save(){
+
   }
 }

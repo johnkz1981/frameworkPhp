@@ -63,11 +63,18 @@ class Db
     $arrObj = [];
     $pdoStatement = $this->query($sql, $params);
 
-    while ($result = $pdoStatement->fetchObject()){
+    while ($result = $pdoStatement->fetchObject()) {
 
       $arrObj[] = $result;
     }
     return $arrObj;
+  }
+
+  public function queryObject($sql, $params = [], $class)
+  {
+    $smtp = $this->query($sql, $params);
+    $smtp->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $class);
+    return $smtp->fetch();
   }
 
   private function prepareDsnString()
