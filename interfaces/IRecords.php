@@ -14,7 +14,5 @@ interface IRecords
 
   public function delete(): int;
 
-  public function update(): int;
-
-  public function insert(): int;
+  public function save(): int;
 }

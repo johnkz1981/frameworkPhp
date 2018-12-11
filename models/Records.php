@@ -8,6 +8,7 @@ use app\services\Db;
 abstract class Records implements IRecords
 {
   protected $db;
+  public $state = null;
 
   public function __construct()
   {
@@ -38,13 +39,13 @@ abstract class Records implements IRecords
     return $this->db->execute($sql, [':id' => $this->id]);
   }
 
-  public function insert(): int
+  protected function insert(): int
   {
     $params = [];
     $columns = [];
 
     foreach ($this as $key => $value) {
-      if ($key === 'db') {
+      if ($key === 'db' || $key === 'state') {
         continue;
       }
       $params[":{$key}"] = $value;
@@ -59,12 +60,12 @@ abstract class Records implements IRecords
     return $this->db->execute($sql, $params);
   }
 
-  public function update(): int
+  protected function update(): int
   {
     $params = [];
 
     foreach ($this as $key => $value) {
-      if ($key === 'db') {
+      if ($key === 'db' || $key === 'state') {
         continue;
       }
       $sqlParams["`$key` = :{$key}"] = $value;
@@ -80,7 +81,12 @@ abstract class Records implements IRecords
     return $this->db->execute($sql, $params);
   }
 
-  public function save(){
-
+  public function save(): int
+  {
+    if ($this->state === 'update') {
+      return $this->update();
+    } elseif ($this->state === 'insert') {
+      return $this->insert();
+    }
   }
 }

@@ -10,22 +10,28 @@ include ROOT_DIR . "/services/Autoloader.php";
 
 spl_autoload_register([new services\Autoloader(), 'loadClass']);
 
-/* $product = Product::getOne(10);
-
+//$product = Product::getOne(14);
+$product = new Product();
 
 $product->name = 'Лютик55';
-$product->update();*/
+$product->price = '25000';
+$product->state = 'insert';
+$product->description = 'insert';
+$product->category_id = 1;
+$product->producer_id = 1;
 
-$controllerName = $_GET['c'] ?? DEFAULT_CONTROLLER;
+echo $product->save();
+
+/*$controllerName = $_GET['c'] ?? DEFAULT_CONTROLLER;
 $actionName = $_GET['a'];
 
 $controllerClass = CONTROLLERS_NAMESPACE . ucfirst($controllerName) . 'Controllers';
 
 if(class_exists($controllerClass)){
   /** @var \app\controllers\ProductControllers $controller */
-  $controller = new $controllerClass;
+  /*$controller = new $controllerClass;
   $controller->runAction($actionName);
-}
+}*/
 
 
 
