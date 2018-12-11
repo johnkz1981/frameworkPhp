@@ -2,10 +2,10 @@
 
 namespace app\models;
 
-use app\interfaces\IModel;
+use app\interfaces\IRecords;
 use app\services\Db;
 
-abstract class Model implements IModel
+abstract class Records implements IRecords
 {
   protected $db;
 
@@ -14,7 +14,7 @@ abstract class Model implements IModel
     $this->db = Db::getInstance();
   }
 
-  public static function getOne(int $id): Model
+  public static function getOne(int $id): Records
   {
     $tableName = static::getTableName();
     $sql = "SELECT * FROM {$tableName} WHERE id = :id";
@@ -73,10 +73,10 @@ abstract class Model implements IModel
 
     // $columns = implode(',', $columns);
     $placeholders = implode(',', array_keys($sqlParams));
-    var_dump($params);
+
     $tableName = $this->getTableName();
     $sql = "UPDATE {$tableName} SET {$placeholders} WHERE id = :id";
-    var_dump($sql);
+
     return $this->db->execute($sql, $params);
   }
 

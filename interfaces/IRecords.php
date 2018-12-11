@@ -2,11 +2,11 @@
 
 namespace app\interfaces;
 
-use app\models\Model;
+use app\models\Records;
 
-interface IModel
+interface IRecords
 {
-  public static function getOne(int $id): Model;
+  public static function getOne(int $id): Records;
 
   public static function getAll(): array;
 

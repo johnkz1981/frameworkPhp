@@ -2,6 +2,7 @@
 namespace app;
 
 use app\models\Product;
+use app\models\Records;
 use app\models\User;
 
 include $_SERVER['DOCUMENT_ROOT'] . "/../config/main.php";
@@ -9,25 +10,22 @@ include ROOT_DIR . "/services/Autoloader.php";
 
 spl_autoload_register([new services\Autoloader(), 'loadClass']);
 
- $product = Product::getOne(10);
-// $user = new User();
+/* $product = Product::getOne(10);
 
-// $obj->password = '4566';
-
-// echo $product->create($obj);
-
-// echo $product->change($obj);
-/*$product = new Product();
-$product->name = 'Роза';
-$product->description = 'Роза Роза';
-$product->price = 20;
-$product->producer_id = 1;
-$product->category_id = 1;
-
-echo $product->insert();*/
 
 $product->name = 'Лютик55';
-$product->update();
+$product->update();*/
+
+$controllerName = $_GET['c'] ?? DEFAULT_CONTROLLER;
+$actionName = $_GET['a'];
+
+$controllerClass = CONTROLLERS_NAMESPACE . ucfirst($controllerName) . 'Controllers';
+
+if(class_exists($controllerClass)){
+  /** @var \app\controllers\ProductControllers $controller */
+  $controller = new $controllerClass;
+  $controller->runAction($actionName);
+}
 
 
 
