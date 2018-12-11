@@ -13,18 +13,6 @@ class User extends Model
     return 'users';
   }
 
-  public function getSqlInsert(): string
-  {
-    $tableName = $this->getTableName();
-    return "INSERT INTO {$tableName} (`user`, password) VALUES (:user, :password)";
-  }
-
-  public function getSqlUpdate(): string
-  {
-    $tableName = $this->getTableName();
-    return "UPDATE {$tableName} SET user = :user, password = :password WHERE id = :id";
-  }
-
   public function getParams(object $object): array
   {
     return [
