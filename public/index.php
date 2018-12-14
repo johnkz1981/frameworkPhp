@@ -6,10 +6,9 @@ use app\models\Records;
 use app\models\User;
 
 include $_SERVER['DOCUMENT_ROOT'] . "/../config/main.php";
-include ROOT_DIR . "/services/Autoloader.php";
-include ROOT_DIR . "/vendor/autoload.php";
+$loader = include ROOT_DIR . "/vendor/autoload.php";
 
-spl_autoload_register([new \app\services\Autoloader(), 'loadClass']);
+$loader->addPsr4('app\\', __DIR__ . '/..');
 
 //$product = Product::getOne(14);
 /*$product = new Product();
