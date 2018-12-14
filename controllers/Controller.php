@@ -2,14 +2,21 @@
 
 namespace app\controllers;
 
-use app\models\Product;
+use app\services\renderer\IRenderer;
 
-class ProductControllers
+abstract class Controller
 {
   protected $action = null;
   protected $defaultAction = 'index';
   protected $useLayout = true;
   protected $layout = 'main';
+
+  protected $renderer;
+
+  public function __construct(IRenderer $renderer)
+  {
+    $this->renderer = $renderer;
+  }
 
   public function runAction($action = null)
   {
@@ -23,22 +30,9 @@ class ProductControllers
     }
   }
 
-  public function actionIndex()
+  protected function render($template, $params)
   {
-    echo 'Этот каталог';
-  }
-
-  public function actionCard()
-  {
-    $this->useLayout = true;
-    $id = $_GET['id'];
-    $product = Product::getOne($id);
-    echo $this->render('card', ['product' => $product]);
-  }
-
-  protected function render($template, $params){
-
-    if($this->useLayout){
+    if ($this->useLayout) {
       return $this->renderTemplate("layouts/{$this->layout}",
         ['content' => $this->renderTemplate($template, $params)]);
     }
@@ -47,10 +41,6 @@ class ProductControllers
 
   protected function renderTemplate($template, $params)
   {
-    ob_start();
-    extract($params);
-    $templatePath = TEMPLATES_DIR . $template . '.php';
-    include $templatePath;
-    return ob_get_clean();
+    return $this->renderer->render($template, $params);
   }
 }

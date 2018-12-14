@@ -1,0 +1,6 @@
+{
+    "name": "user/framework-php",
+    "require": {
+        "twig/twig": "^2.0"
+    }
+}

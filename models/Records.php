@@ -8,11 +8,15 @@ use app\services\Db;
 abstract class Records implements IRecords
 {
   protected $db;
-  public $state = null;
 
   public function __construct()
   {
-    $this->db = Db::getInstance();
+    $this->db = static::getDb();
+  }
+
+  public static function getDb()
+  {
+    return Db::getInstance();
   }
 
   public static function getOne(int $id): Records
@@ -20,7 +24,7 @@ abstract class Records implements IRecords
     $tableName = static::getTableName();
     $sql = "SELECT * FROM {$tableName} WHERE id = :id";
 
-    return DB::getInstance()->queryObject($sql, [':id' => $id], get_called_class());
+    return static::getDb()->queryObject($sql, [':id' => $id], get_called_class());
   }
 
   public static function getAll(): array
@@ -28,7 +32,7 @@ abstract class Records implements IRecords
     $tableName = static::getTableName();
     $sql = "SELECT * FROM {$tableName}";
 
-    return DB::getInstance()->queryAll($sql);
+    return static::getDb()->queryAll($sql);
   }
 
   public function delete(): int
@@ -45,7 +49,7 @@ abstract class Records implements IRecords
     $columns = [];
 
     foreach ($this as $key => $value) {
-      if ($key === 'db' || $key === 'state') {
+      if ($key === 'db' ) {
         continue;
       }
       $params[":{$key}"] = $value;
@@ -65,7 +69,7 @@ abstract class Records implements IRecords
     $params = [];
 
     foreach ($this as $key => $value) {
-      if ($key === 'db' || $key === 'state') {
+      if ($key === 'db') {
         continue;
       }
       $sqlParams["`$key` = :{$key}"] = $value;
@@ -83,10 +87,10 @@ abstract class Records implements IRecords
 
   public function save(): int
   {
-    if ($this->state === 'update') {
-      return $this->update();
-    } elseif ($this->state === 'insert') {
+    if ($this->id === null) {
       return $this->insert();
+    } else {
+      return $this->update();
     }
   }
 }
