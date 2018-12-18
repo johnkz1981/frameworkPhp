@@ -2,5 +2,10 @@
     "name": "user/framework-php",
     "require": {
         "twig/twig": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "app\\": "./"
+        }
     }
 }

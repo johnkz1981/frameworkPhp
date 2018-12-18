@@ -8,7 +8,7 @@ use app\models\User;
 include $_SERVER['DOCUMENT_ROOT'] . "/../config/main.php";
 $loader = include ROOT_DIR . "/vendor/autoload.php";
 
-$loader->addPsr4('app\\', __DIR__ . '/..');
+$request = new \app\services\Request();
 
 //$product = Product::getOne(14);
 /*$product = new Product();
@@ -21,15 +21,15 @@ $product->producer_id = 1;
 
 echo $product->save();*/
 
-$controllerName = $_GET['c'] ?: DEFAULT_CONTROLLER;
-$actionName = $_GET['a'];
+$controllerName = $request->getControllerName() ?: DEFAULT_CONTROLLER;
+$actionName = $request->getActionName();
 
 $controllerClass = CONTROLLERS_NAMESPACE . ucfirst($controllerName) . 'Controller';
 
 if(class_exists($controllerClass)){
   /** @var \app\controllers\ProductControllers $controller */
   $controller = new $controllerClass(
-    new app\services\renderer\TwigRenderer()
+    new app\services\renderer\TemplateRenderer()
   );
   $controller->runAction($actionName);
 }
