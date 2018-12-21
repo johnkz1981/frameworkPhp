@@ -8,18 +8,24 @@ class Db
 {
   use TSingletone;
 
-  private $config = [
-    'driver' => 'mysql',
-    'host' => 'localhost',
-    'login' => 'root',
-    'password' => '',
-    'database' => 'rose',
-    'port' => 3306,
-    'charset' => 'utf8'
-  ];
+  private $config;
 
   /** @var \PDO */
   private $conn = null;
+
+  public function __construct($driver, $host, $login, $password, $database, $port, $charset)
+  {
+    $this->config = [
+      'driver' => $driver,
+      'host' => $host,
+      'login' => $login,
+      'password' => $password,
+      'database' => $database,
+      'port' => $port,
+      'charset' => $charset
+    ];
+  }
+
 
   function getConnection()
   {
@@ -55,7 +61,7 @@ class Db
 
   public function queryOne($sql, $params = [])
   {
-    return $this->query($sql, $params)->fetchObject();
+    return $this->query($sql, $params)->fetchObject()[0];
   }
 
   public function queryAll($sql, $params = [])
@@ -74,7 +80,7 @@ class Db
   {
     $smtp = $this->query($sql, $params);
     $smtp->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $class);
-    return $smtp->fetch();
+    return $smtp->fetchAll();
   }
 
   private function prepareDsnString()

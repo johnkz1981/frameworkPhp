@@ -8,6 +8,7 @@ class Request
   protected $controllerName;
   protected $actionName;
   protected $params;
+  protected $requestMethod;
 
   public function __construct()
   {
@@ -43,11 +44,16 @@ class Request
 
   public function isAjax()
   {
-    if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
-      !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
-      strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
-      return 'Это ajax запрос!';
-    }
-    return 'Это не ajax запрос!';
+    return $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
+  }
+
+  public function isGet()
+  {
+    return $_SERVER['REQUEST_METHOD'] === 'GET';
+  }
+
+  public function isPost()
+  {
+    return $_SERVER['REQUEST_METHOD'] === 'POST';
   }
 }

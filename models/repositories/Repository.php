@@ -1,5 +1,8 @@
 <?php
+
 namespace app\models\repositories;
+
+use app\base\App;
 use app\interfaces\IRepository;
 use app\services\Db;
 use app\models\Records;
@@ -15,7 +18,7 @@ abstract class Repository implements IRepository
 
   public static function getDb()
   {
-    return Db::getInstance();
+    return App::call()->db;
   }
 
   public function getOne(int $id)
@@ -23,7 +26,7 @@ abstract class Repository implements IRepository
     $tableName = $this->getTableName();
     $sql = "SELECT * FROM {$tableName} WHERE id = :id";
 
-    return static::getDb()->queryObject($sql, [':id' => $id], $this->getEntityClass());
+    return static::getDb()->queryObject($sql, [':id' => $id], $this->getEntityClass())[0];
   }
 
   public function getAll(): array
@@ -48,7 +51,7 @@ abstract class Repository implements IRepository
     $columns = [];
 
     foreach ($records as $key => $value) {
-      if ($key === 'db' ) {
+      if ($key === 'db') {
         continue;
       }
       $params[":{$key}"] = $value;
@@ -91,5 +94,10 @@ abstract class Repository implements IRepository
     } else {
       return $this->update($records);
     }
+  }
+
+  public function find($sql, $params = [])
+  {
+    return $this->db->queryObject($sql, $params, $this->getEntityClass());
   }
 }

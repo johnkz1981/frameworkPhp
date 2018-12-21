@@ -2,30 +2,39 @@
 
 namespace app\models;
 
-class User extends Model
+use app\base\App;
+
+class User extends Records
 {
   public $id;
   public $user;
   public $password;
 
-  public function getTableName(): string
+  public function getAll()
   {
-    return 'users';
+    $basket = [];
+    $session = App::call()->session;
+
+    if (!empty($session->getAllOfDirectory('basket'))) {
+
+      $productsIds = array_keys($session->getAllOfDirectory('basket'));
+      $products = (new ProductRepository)->getProductsByIds($productsIds);
+
+      foreach ($products as $product) {
+
+        $basket[] = [
+          'product' => $product,
+          'count' => $session->get(['basket', $product->id])
+        ];
+      }
+    }
+    return $basket;
   }
 
-  public function getParams(object $object): array
+  public function auth($user, $password)
   {
-    return [
-      ':id' => $object->id,
-      ':user' => $object->user,
-      ':password' => $object->password,
-    ];
-  }
+    $auth = App::call()->auth;
 
-  public function getRequiredFields(): array
-  {
-    return [
-      'user', 'password'
-    ];
+    var_dump($auth->authorize($user, $password));
   }
 }
