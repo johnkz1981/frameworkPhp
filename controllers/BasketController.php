@@ -15,7 +15,7 @@ class BasketController extends Controller
 
   public function actionAdd()
   {
-    $request = new Request();
+    $request = App::call()->request;
 
     if ($request->isPost()) {
       $productId = (int)$request->getParams('id');

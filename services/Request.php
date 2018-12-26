@@ -42,6 +42,11 @@ class Request
     return $this->params[$key];
   }
 
+  public function getAllParams()
+  {
+    return $this->params;
+  }
+
   public function isAjax()
   {
     return $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';

@@ -4,6 +4,7 @@ namespace app\controllers;
 use app\models\repositories\UserRepository;
 use app\models\User;
 use app\services\Request;
+use app\base\App;
 
 class UserController extends Controller
 {
@@ -15,7 +16,7 @@ class UserController extends Controller
 
   public function actionAuth()
   {
-    $request = new Request();
+    $request = App::call()->request;
 
     if ($request->isGet()) {
       $user = $request->getParams('user');
@@ -24,5 +25,10 @@ class UserController extends Controller
       (new User())->auth($user, $password);
 
     }
+  }
+
+  public function actionExit()
+  {
+    App::call()->auth->exit();
   }
 }

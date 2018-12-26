@@ -11,12 +11,20 @@ class Session
 
   public function get($key)
   {
-    return $_SESSION[$this->getId()][$key[0]][$key[1]];
+    if(is_array($key)){
+      return $_SESSION[$this->getId()][$key[0]][$key[1]];
+    } else {
+      return $_SESSION[$this->getId()][$key];
+    }
   }
 
   public function set($key, $value)
   {
-    $_SESSION[$this->getId()][$key[0]][$key[1]] = $value;
+    if(is_array($key)){
+      $_SESSION[$this->getId()][$key[0]][$key[1]] = $value;
+    } else {
+      $_SESSION[$this->getId()][$key] = $value;
+    }
   }
 
   public function unSet($key)

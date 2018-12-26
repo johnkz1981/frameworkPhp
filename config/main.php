@@ -27,6 +27,9 @@ return [
     ],
     'auth' => [
       'class' => \app\services\Auth::class
+    ],
+    'validator' => [
+      'class' => \app\services\Validator::class
     ]
   ]
 ];

@@ -3,6 +3,7 @@
 namespace app\models;
 
 use app\base\App;
+use app\models\repositories\UserRepository;
 
 class User extends Records
 {
@@ -34,7 +35,17 @@ class User extends Records
   public function auth($user, $password)
   {
     $auth = App::call()->auth;
+    $auth->authorize($user, $password);
+  }
 
-    var_dump($auth->authorize($user, $password));
+  public function getUsers(){
+
+    $users = [];
+
+    foreach ((new UserRepository())->getAll() as $user) {
+
+      $users[$user->id] = $user;
+    }
+    return $users;
   }
 }

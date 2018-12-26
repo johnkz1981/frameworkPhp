@@ -16,8 +16,18 @@ class UserRepository extends Repository
     return User::class;
   }
 
-  public function getPassword(string $user)
+  public function getPassword(string $user): ?string
   {
-    return $this->find("SELECT * FROM users WHERE `user` = \"$user\"");
+    return $this->find("SELECT password FROM users WHERE `user` = \"$user\"")[0]->password;
+  }
+
+  public function getId(string $user): ?int
+  {
+    return $this->find("SELECT id FROM users WHERE `user` = \"$user\"")[0]->id;
+  }
+
+  public function isAdmin(string $id): ?int
+  {
+    return $this->find("SELECT admin FROM users WHERE id = {$id}")[0]->admin;
   }
 }

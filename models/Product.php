@@ -2,6 +2,8 @@
 
 namespace app\models;
 
+use app\models\repositories\ProductRepository;
+
 class Product extends Records
 {
   public $id;
@@ -20,5 +22,21 @@ class Product extends Records
     $this->price = $price;
     $this->producer_id = $producer_id;
     $this->category_id = $category_id;
+  }
+
+  public function getProducts($order){
+
+    $productObj = new \stdClass();
+    $productParse = [];
+    $productsIds = array_keys($order);
+    $products = (new ProductRepository)->getProductsByIds($productsIds);
+
+    foreach ($products as $key => $product){
+
+      $productObj->count = ((array)json_decode($order->products))[$product->id];
+      $productObj->name = $product->name;
+      $productParse[] = $productObj;
+    }
+    return $productParse;
   }
 }
